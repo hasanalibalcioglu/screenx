@@ -70,8 +70,17 @@ class ScreenshotController extends Controller
     public function logs($name) {
         //$logs = Visit::where('ip' , '!=',$this->getIp())->get();
         $logs = Visit::where('name',$name)->orderBy('created_at','desc')->get();
+        $result = array();
+        foreach ($logs as $log) {
+            $gip[$log['ip']][] = $log;
+        }
+        foreach ($gip as $key => $value){
+            $ipData[$key] = $this->ipInfo($key);
+        }
+
         $data['logs'] = $logs;
         $data['name'] = $name;
+        $data['ipData'] = $ipData;
         return view('logs')->with($data);
     }
 
@@ -85,6 +94,36 @@ class ScreenshotController extends Controller
                     }
                 }
             }
+        }
+    }
+
+    public static function ipInfo($ip) {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://freegeoip.app/json/".$ip,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "content-type: application/json"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        } else {
+            return json_decode($response,true);
         }
     }
 }
