@@ -1,10 +1,15 @@
 <?php
 
-
 namespace App;
 
 
-class Visit
+use Illuminate\Database\Eloquent\Model;
+
+class Visit extends Model
 {
+    protected $table = 'visits';
+    protected $fillable = [
+        'name', 'ip',
+    ];
 
 }

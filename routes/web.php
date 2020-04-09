@@ -10,7 +10,18 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return "CDN SERVER BY H3X";
 });
+
+$router->post('/test', 'ScreenshotController@upload');
+
+$router->post('/upload', 'ScreenshotController@upload');
+
+$router->get('/i/{name}', [
+    'as' => 'show', 'uses' => 'ScreenshotController@show'
+]);
+
+$router->get('/i/{name}/logs', [
+    'as' => 'logs', 'uses' => 'ScreenshotController@logs'
+]);
