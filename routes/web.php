@@ -14,8 +14,6 @@ $router->get('/', function () use ($router) {
     return "CDN SERVER BY H3X";
 });
 
-$router->post('/test', 'ScreenshotController@upload');
-
 $router->post('/upload', 'ScreenshotController@upload');
 
 $router->get('/i/{name}', [
